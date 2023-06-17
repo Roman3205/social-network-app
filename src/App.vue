@@ -1,11 +1,16 @@
 <script>
 import AppSidebar from './components/AppSidebar.vue';
 import {RouterView} from 'vue-router'
+// import AppRegister from './components/AppRegister.vue';
+// import AppEnter from './components/AppEnter.vue';
+
 
 export default {
 	components: {
 		AppSidebar,
 		RouterView
+		// AppRegister
+		// AppEnter
 	}
 };
 </script>
@@ -23,13 +28,14 @@ export default {
 					<router-view></router-view>
 				</div>
 			</div>
-			
 		</div>
+		<!-- <app-register></app-register> -->
+		<!-- <app-enter></app-enter> -->
 	</div>
 </template>
 
 <style>
-body {
-	background-color: #e3e3e3;
-}
+	body {
+		background-color: #e3e3e3;
+	}
 </style>

@@ -18,7 +18,7 @@ export default {
             })
         },
         goFeed() {
-            this.$route.push({
+            this.$router.push({
                 name: 'feed'
             })
         }

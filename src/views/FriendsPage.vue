@@ -1,33 +1,33 @@
 <script>
-import axios from 'axios';
+    import axios from 'axios';
 
-export default {
-    data() {
-        return {
-            friends: []
-        }
-    },
-
-    mounted() {
-        this.loadFriends();
-    },
-    
-    methods: {
-        async loadFriends() {
-            let response = await axios('/users');
-            this.friends = response.data;
+    export default {
+        data() {
+            return {
+                friends: []
+            }
         },
 
-        goUser(user) {
-            this.$router.push({
-                name: 'user',
-                params: {
-                    username: user.username
-                }
-            })
+        mounted() {
+            this.loadFriends();
+        },
+        
+        methods: {
+            async loadFriends() {
+                let response = await axios('/users');
+                this.friends = response.data;
+            },
+
+            goUser(user) {
+                this.$router.push({
+                    name: 'user',
+                    params: {
+                        username: user.username
+                    }
+                })
+            }
         }
     }
-}
 </script>
 
 <template>
