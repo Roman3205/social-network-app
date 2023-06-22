@@ -48,19 +48,10 @@
                 </div>
             </div>
         </article>
-        <!-- <ul class="list-group my-3">
-            <li v-for="(item) in feed"
-                class="list-group-item feed">
-                <img :src="'/src/avatars/' + item.avatar">
-                <div class="username">
-                    {{ item.firstName }} {{ item.lastName }}
-                </div>  
-            </li>
-        </ul> -->
     </div>
 </template>
 
-<style>
+<style scoped>
     .feed-page img {
         width: 80px;
         height: 80px;

@@ -9,7 +9,9 @@ export default {
             user: null,
             posts: [],
             postContent: '',
-            createPostHide: false
+            createPostHide: false,
+            info: '',
+            image: ''
         }
     },
 
@@ -35,10 +37,11 @@ export default {
             let response;
             if (this.$route.name == 'profile') {
                 response = await axios.get(`/profile`);
+                this.createPostHide = false
             } else {
                 response = await axios.get(`/user`, {
                     params: {
-                        username: this.$route.params.username
+                        id: this.$route.params.id
                     }
                 })
                 this.createPostHide = true
@@ -57,16 +60,56 @@ export default {
 
         async createPost(event) {
             event.preventDefault()
-            await axios.post(`/post/create`, {
+            if(this.postContent !== '') {
+                await axios.post(`/post/create`, {
                 content: this.postContent 
             })
             this.postContent = ''
+            }
             this.loadPosts()
         },
 
         getRelativeDate(date) {
             let day = dayjs(date);
             return day.fromNow();
+        },
+        
+        async CreateInfo(e) {
+            e.preventDefault()
+            if (this.info === '') {
+                this.info = 'Без описания';
+            }
+            await axios.post('/info-create', {
+            info: this.info,
+            })
+            this.info = ''
+            this.loadUser()
+        },
+
+        async ChangeImage(e) {
+            e.preventDefault()
+            if (this.image === '') {
+                this.image = 'no-profile-image.png';
+            }
+            await axios.post('/image-create', {
+                image: this.image
+            })
+            this.image = ''
+            this.loadUser()
+        },
+
+        async removeFriend(e) {
+            e.preventDefault()
+            axios
+                .post('/remove-friend', {
+                    friendId: this.user._id
+                })
+                .then(() => {
+                    this.loadUser()
+                    this.$router.push({
+                    name: 'friends'
+                })
+                })
         }
     }
 }
@@ -83,27 +126,46 @@ export default {
                     <div class="row g-0">
                         <div class="col-md-4">
                             <img :src="'/src/avatars/' + user.avatar" class="img-fluid rounded-start">
+                            <div v-if="!createPostHide" class="img-selector d-flex g-0">
+                                <input type="text" v-model="image" class="input-info img-inp mt-1" placeholder="Вставьте ссылку на изображение"/>
+                                <form @submit="ChangeImage">
+                                    <button type="submit" class="btn btn-warning ok">OK</button>
+                                </form>
+                            </div>
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
-                                <h5 class="card-title">
+                                <h3 class="card-title">
                                     {{ user.firstName }} {{ user.lastName }}
-                                </h5>
-                                <p class="card-text">
+                                </h3>
+                                <form v-if="!createPostHide" @submit="CreateInfo" class="info-form mt-4">
+                                    <input type="text" v-model="info" class="input-info" placeholder="Расскажи о себе">
+                                    <button type="submit" class="btn btn-warning">Сохранить</button>
+                                </form>
+                                <p v-if="!createPostHide" class="mt-2">Твое описание:</p>
+                                <p class="card-text info-card" :class="{
+                                    'mt-5': createPostHide
+                                }">
                                     {{ user.info }}
                                 </p>
-                                <p class="card-text">
-                                    Телефон: {{ user.phone }}
-                                </p>
+                                <div v-if="!createPostHide" class="secret-info">
+                                    <p class="card-text">
+                                    Твоя почта: <b>{{ user.mail }}</b>
+                                    </p>
+                                    <p class="card-text">
+                                    Твой пароль: <b>{{ user.password }}</b>
+                                    </p>
+                                </div>
+                                <div class="add" v-if="createPostHide">
+                                    <button class="btn add-friend" @click="removeFriend">Удалить из друзей</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="user-wall">
-                <form class="post-form my-3" @submit="createPost" :class="{
-                    'd-none': createPostHide
-                }" >
+            <div class="user-wall" v-if="!createPostHide">
+                <form class="post-form my-3" @submit="createPost">
                     <textarea v-model="postContent" class="form-control" rows="2" placeholder="Что у вас нового?"></textarea>
                     <button type="submit" class="btn btn-warning">
                         Отправить
@@ -124,12 +186,51 @@ export default {
     </div>
 </template>
 
-<style>
+<style scoped>
     .user-page img {
-        height: 100%;
+        height: 85%;
         width: 100%;
         object-fit: cover;
         object-position: center;
+    }
+
+    .info-form {
+        display: flex;
+        gap: 5px;
+    }
+
+    .img-inp {
+        margin: 0 auto;
+        font-size: 15px!important;
+        font-weight: bold!important;
+    }
+
+    .info-card {
+        font-style: italic;
+        border: 3px solid lightgrey;
+        max-width: 595px;
+        height: 60px;
+        border-radius: 5px;
+        overflow-y: scroll;
+        cursor: pointer;
+    }
+
+    .ok {
+        transform: scale(0.9);
+        margin-top: 4px;
+    }
+
+    .input-info {
+        border: 3px solid lightgrey;
+        display: block;
+        width: 80%;
+        height: 38px;
+        background: none;
+        color: #666;
+        font-family: monospace;
+        font-size: 17px;
+        font-weight: lighter;
+        border-radius: 5px;
     }
 
     .post-form {
@@ -141,10 +242,24 @@ export default {
         font-size: 14px;
         color: #6c757d;
     }
+
     .btn-warning {
         transition: 0.7s;
     }
+
     .btn-warning:hover {
+        opacity: 0.7;
+    }
+    
+    .add-friend {
+        background-color: rgb(220, 18, 18);
+        color: #fff!important;
+        transition: 0.6s;
+    }
+
+    .add-friend:hover {
+        background-color: rgb(220, 18, 18);
+        color: #fff!important;
         opacity: 0.7;
     }
 </style>

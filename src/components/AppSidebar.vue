@@ -1,11 +1,7 @@
 <script>
+import axios from 'axios'
+
 export default {
-    data() {
-        return {
-            
-        }
-    },
-    
     methods: {
         goProfile() {
             this.$router.push({
@@ -20,6 +16,12 @@ export default {
         goFeed() {
             this.$router.push({
                 name: 'feed'
+            })
+        },
+        async logOut() {
+            await axios.post('/logout');
+            this.$router.push({
+                name: 'login'
             })
         }
     }
@@ -54,6 +56,11 @@ export default {
                     Новости
                 </button>
             </li>
+            <li>
+                <button class="btn red-button text-black" @click="logOut()">
+                    Выйти
+                </button>
+            </li>
         </ul>
     </div>
 </template>
@@ -79,5 +86,17 @@ export default {
 
     .app-sidebar img {
         width: 100%;
+    }
+
+    .red-button {
+        background-color: rgb(220, 18, 18);
+        color: #fff!important;
+        transition: 0.6s;
+    }
+
+    .red-button:hover {
+        background-color: rgb(220, 18, 18);
+        color: #fff!important;
+        opacity: 0.7;
     }
 </style>

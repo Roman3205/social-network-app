@@ -1,41 +1,43 @@
 <script>
-import AppSidebar from './components/AppSidebar.vue';
-import {RouterView} from 'vue-router'
-// import AppRegister from './components/AppRegister.vue';
-// import AppEnter from './components/AppEnter.vue';
-
+import { RouterView } from 'vue-router'
+import AppEnter from './views/AppEnter.vue'
+import AppSidebar from './components/AppSidebar.vue'
 
 export default {
-	components: {
-		AppSidebar,
-		RouterView
-		// AppRegister
-		// AppEnter
+  components: {
+    RouterView,
+    AppEnter,
+    AppSidebar
+  },
+  computed: {
+    shouldShowSidebar() {
+      return this.$route.name !== 'login' && this.$route.name !== 'register'
+    },
+	showAuth() {
+		return this.$route.name !== 'login' && this.$route.name !== 'register'
 	}
-};
+  }
+}
 </script>
 
 <template>
-	<div class="app">
-		<!-- <app-header></app-header> -->
-
-		<div class="container py-3">
-			<div class="row">
-				<div class="col-3">
-					<app-sidebar></app-sidebar>
-				</div>
-				<div class="col-9">
-					<router-view></router-view>
-				</div>
-			</div>
-		</div>
-		<!-- <app-register></app-register> -->
-		<!-- <app-enter></app-enter> -->
-	</div>
+  <div class="app">
+    <div class="container py-3" v-if="shouldShowSidebar">
+      <div class="row">
+        <div class="col-3">
+          <app-sidebar></app-sidebar>
+        </div>
+        <div class="col-9">
+          <router-view></router-view>
+        </div>
+      </div>
+    </div>
+    <router-view v-if="!showAuth"></router-view>
+  </div>
 </template>
 
 <style>
-	body {
-		background-color: #e3e3e3;
-	}
+  body {
+    background-color: #e3e3e3;
+  }
 </style>

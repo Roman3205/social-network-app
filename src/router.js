@@ -2,13 +2,17 @@ import { createRouter, createWebHistory } from 'vue-router'
 import FriendsPage from './views/FriendsPage.vue'
 import UserPage from './views/UserPage.vue'
 import FeedPage from './views/FeedPage.vue'
+import AppEnter from './views/AppEnter.vue'
+import AppRegister from './views/AppRegister.vue'
+import NotFoundPage from './views/NotFoundPage.vue'
+// import AuthPage from './views/AuthPage.vue'
 
 export default createRouter({
     history: createWebHistory(),
 
     routes: [
         {
-            path: '/',
+            path: '/profile',
             name: 'profile',
             component: UserPage
         },
@@ -18,7 +22,7 @@ export default createRouter({
             component: FriendsPage
         },
         {
-            path: '/user/:username',
+            path: '/user/:id',
             name: 'user',
             component: UserPage
         },
@@ -26,6 +30,25 @@ export default createRouter({
             path: '/feed',
             name: 'feed',
             component: FeedPage
+        },
+        {
+            path: '/',
+            redirect: '/login'
+        },
+        {
+            path: '/login',
+            name: 'login',
+            component: AppEnter
+        },
+        {
+            path: '/register',
+            name: 'register',
+            component: AppRegister
+        },
+        {
+            path: '/:pathMatch(.*)',
+            name: 'not-found',
+            component: NotFoundPage
         }
     ]
 })

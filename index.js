@@ -15,19 +15,16 @@ let mongoose = require('mongoose')
 mongoose.connect('mongodb://127.0.0.1:27017/social-network')
 
 let userSchema = new mongoose.Schema({
-    username: {
-        unique: true,
-        type: String
-    },
     avatar: String,
     firstName: String,
     lastName: String,
     info: String,
-    phone: String,
     friends: [{
         type: mongoose.ObjectId,
         ref: 'user'
-    }]
+    }],
+    password: String,
+    mail: String
 })
 
 let postSchema = new mongoose.Schema({
@@ -43,23 +40,93 @@ let postSchema = new mongoose.Schema({
 let User = mongoose.model('user', userSchema)
 let Post = mongoose.model('post', postSchema)
 
-let currentuser = '6480a6b45299bc01bb788b14'
+let currentuser = null
+
+app.post('/register', async function(req,res) {
+    let name = req.body.name
+    let surname = req.body.surname
+    let mail = req.body.mail
+    let password = req.body.password
+
+    let user = new User({
+        firstName: name,
+        lastName: surname,
+        avatar: 'no-profile-image.png',
+        info: 'Без описания',
+        password: password,
+        mail: mail,
+        friends: []
+    })
+
+    await user.save()
+
+    res.send(user)
+})
+
+app.post('/enter', async function(req,res) {
+    let mail = req.body.mail
+    let password = req.body.password
+
+    let user = await User.findOne({mail: mail, password: password})
+
+    if(user) {
+        currentuser = user._id
+        res.send(user)
+    } else {
+        res.status(404).send('User not found');
+    }
+})
+
+app.post('/info-create', async function(req,res) {
+    let info = req.body.info
+
+    let user = await User.findOne({_id: currentuser})
+    user.info = info
+
+    await user.save()
+
+    res.send(user)
+})
+
+app.post('/image-create', async function(req,res) {
+    let image = req.body.image
+
+    let user = await User.findOne({_id: currentuser})
+    user.avatar = image
+
+    await user.save()
+
+    res.send(user)
+})
 
 app.get('/profile', async function (req, res) {
+    if (currentuser == null) {
+        res.status(403).send('Вы не вошли в аккаунт');
+        return;
+    }
     let user = await User.findOne({_id: currentuser})
 
-    res.redirect(`/user?username=${user.username}`)
+    res.redirect(`/user?id=${user._id}`)
 })
 
 app.get('/user', async function (req, res) {
-    let username = req.query.username
+    if (currentuser == null) {
+        res.status(403).send('Вы не вошли в аккаунт');
+        return;
+    }
+    let id = req.query.id
 
-    let user = await User.findOne({username: username})
+    let user = await User.findOne({_id: id})
 
     res.send(user)
 })
 
 app.get('/user/posts', async function (req, res) {
+    if (currentuser == null) {
+        res.status(403).send('Вы не вошли в аккаунт');
+        return;
+    }
+    
     let id = req.query.id
 
     let posts = await Post.find({'author': id}).sort({createdAt: -1})
@@ -68,12 +135,20 @@ app.get('/user/posts', async function (req, res) {
 })
 
 app.get('/users', async function (req, res) {
+    if (currentuser == null) {
+        res.status(403).send('Вы не вошли в аккаунт');
+        return;
+    }
     let users = await User.find({_id: {$ne: currentuser}})
 
     res.send(users)
 })
 
 app.get('/feed', async function (req, res) {
+    if (currentuser == null) {
+        res.status(403).send('Вы не вошли в аккаунт');
+        return;
+    }
     let posts = await Post.find({author: {$ne: currentuser}}).sort({createdAt: -1}).limit(5).populate('author')
     
     res.send(posts)
@@ -90,4 +165,61 @@ app.post('/post/create', async function (req, res) {
     await post.save()
 
     res.send(post)
+})
+
+app.post('/logout', async function (req, res) {
+    currentuser = null
+    res.send('Logged out')
+})
+
+app.post('/add-friend', async function(req,res) {
+    let friendId = req.body.friendId
+
+    let currentUser = await User.findOne({ _id: currentuser });
+    let friendUser = await User.findOne({ _id: friendId });
+
+    if (currentUser.friends.includes(friendId) || friendUser.friends.includes(currentuser)) {
+        res.status(400).send('Пользователи уже являются друзьями');
+        return;
+    }
+
+    currentUser.friends.push(friendId);
+
+    await currentUser.save();
+
+    friendUser.friends.push(currentuser);
+
+    await friendUser.save();
+
+    res.send('Пользователь успешно добавлен в друзья');
+})
+
+app.post('/remove-friend', async function(req,res) {
+    let friendId = req.body.friendId
+
+    let currentUser = await User.findOne({ _id: currentuser });
+    let friendUser = await User.findOne({ _id: friendId });
+
+    currentUser.friends.splice(friendId, 1);
+
+    await currentUser.save();
+
+    friendUser.friends.splice(currentuser, 1);
+
+    await friendUser.save();
+
+    res.send('Пользователь удален из друзей');
+})
+
+app.get('/friends', async function(req, res) {
+    let user = await User.findOne({ _id: currentuser }).populate('friends', '-friends')
+
+    if (!user) {
+        res.status(404).send('Пользователь не найден');
+        return;
+    }
+
+    let friends = user.friends
+
+    res.send(friends)
 })
