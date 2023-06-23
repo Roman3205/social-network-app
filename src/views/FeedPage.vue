@@ -61,7 +61,7 @@
         border: 1px solid #6c757d;
     }
 
-    .feed-page .feed {
+    .feed-page .info-card {
         cursor: pointer;
         height: 100px;
         display: flex;

@@ -5,7 +5,7 @@ import FeedPage from './views/FeedPage.vue'
 import AppEnter from './views/AppEnter.vue'
 import AppRegister from './views/AppRegister.vue'
 import NotFoundPage from './views/NotFoundPage.vue'
-// import AuthPage from './views/AuthPage.vue'
+import ChatsPage from './views/ChatsPage.vue'
 
 export default createRouter({
     history: createWebHistory(),
@@ -44,6 +44,11 @@ export default createRouter({
             path: '/register',
             name: 'register',
             component: AppRegister
+        },
+        {
+            path: '/messages',
+            name: 'messages',
+            component: ChatsPage
         },
         {
             path: '/:pathMatch(.*)',

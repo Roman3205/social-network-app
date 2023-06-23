@@ -49,7 +49,7 @@
                     })
                     .catch(error => {
                         if (error.response && error.response.status === 400) {
-                            alert('Пользователь уже в ваших друзьях');
+                            alert('Вы уже создали чат с данным пользователем');
                         } else {
                             alert('Ошибка при отправке запроса на сервер');
                         }
@@ -88,7 +88,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
     .users-page img {
         width: 80px;
         height: 80px;

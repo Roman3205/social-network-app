@@ -18,6 +18,11 @@ export default {
                 name: 'feed'
             })
         },
+        goChats() {
+            this.$router.push({
+                name: 'messages'
+            })
+        },
         async logOut() {
             await axios.post('/logout');
             this.$router.push({
@@ -57,6 +62,13 @@ export default {
                 </button>
             </li>
             <li>
+                <button class="btn btn-outline-warning text-black" @click="goChats()" :class="{
+                    active: $route.name === 'messages'
+                }" >
+                    Сообщения
+                </button>
+            </li>
+            <li>
                 <button class="btn red-button text-black" @click="logOut()">
                     Выйти
                 </button>
@@ -65,7 +77,7 @@ export default {
     </div>
 </template>
 
-<style>
+<style scoped>
     .app-sidebar ul {
         padding: 0;
         display: flex;

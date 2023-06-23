@@ -24,7 +24,11 @@ let userSchema = new mongoose.Schema({
         ref: 'user'
     }],
     password: String,
-    mail: String
+    mail: String,
+    chats: [{
+        type: mongoose.ObjectId,
+        ref: 'chat'
+    }]
 })
 
 let postSchema = new mongoose.Schema({
@@ -37,8 +41,38 @@ let postSchema = new mongoose.Schema({
     timestamps: true
 })
 
+let chatSchema = new mongoose.Schema ({
+    from: {
+        type: mongoose.ObjectId,
+        ref: 'user'
+    },
+    to: {
+        type: mongoose.ObjectId,
+        ref: 'user'
+    },
+    messages: [{
+        type: mongoose.ObjectId,
+        ref: 'message'
+    }]
+})
+
+let messageSchema = new mongoose.Schema ({
+    from: {
+        type: mongoose.ObjectId,
+        ref: 'user'
+    },
+    to: {
+        type: mongoose.ObjectId,
+        ref: 'user'
+    },
+    text: String
+})
+
+
 let User = mongoose.model('user', userSchema)
 let Post = mongoose.model('post', postSchema)
+let Chat = mongoose.model('chat', chatSchema)
+let Message = mongoose.model('message', messageSchema)
 
 let currentuser = null
 
@@ -194,22 +228,31 @@ app.post('/add-friend', async function(req,res) {
     res.send('Пользователь успешно добавлен в друзья');
 })
 
-app.post('/remove-friend', async function(req,res) {
-    let friendId = req.body.friendId
+app.post('/remove-friend', async function(req, res) {
+    let friendId = req.body.friendId;
 
     let currentUser = await User.findOne({ _id: currentuser });
     let friendUser = await User.findOne({ _id: friendId });
 
-    currentUser.friends.splice(friendId, 1);
+    if (!currentUser) {
+        res.status(404).send('Пользователь не найден');
+        return;
+    }
 
+    if (!friendUser) {
+        res.status(404).send('Друг не найден');
+        return;
+    }
+
+    currentUser.friends.splice(friendId, 1);
     await currentUser.save();
 
     friendUser.friends.splice(currentuser, 1);
-
     await friendUser.save();
 
     res.send('Пользователь удален из друзей');
-})
+});
+
 
 app.get('/friends', async function(req, res) {
     let user = await User.findOne({ _id: currentuser }).populate('friends', '-friends')
@@ -222,4 +265,34 @@ app.get('/friends', async function(req, res) {
     let friends = user.friends
 
     res.send(friends)
+})
+
+app.post('/chat', async function (req,res) {
+    let friendId = req.body.friendId
+
+    let currentUser = await User.findOne({ _id: currentuser });
+    let friendUser = await User.findOne({ _id: friendId });
+
+    let check = await Chat.findOne({from: currentUser, to: friendId})
+
+    if(check) {
+        res.status(400).send('Чат уже создан');
+        return;
+    }
+
+    let chat = new Chat({
+        from: currentUser,
+        to: friendId,
+        messages: []
+    })
+
+    await chat.save()
+
+    currentUser.chats.push(chat._id);
+    await currentUser.save();
+
+    friendUser.chats.push(chat._id);
+    await friendUser.save();
+
+    res.send('Чат создан');
 })

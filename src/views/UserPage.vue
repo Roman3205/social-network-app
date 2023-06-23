@@ -110,6 +110,27 @@ export default {
                     name: 'friends'
                 })
                 })
+        },
+
+        async createChat(e) {
+            e.preventDefault()
+            axios
+                .post('/chat', {
+                    friendId: this.user._id
+                })
+                .then(() => {
+                    this.loadUser()
+                    this.$router.push({
+                    name: 'friends'
+                })
+                })
+                .catch(error => {
+                    if (error.response && error.response.status === 400) {
+                        alert('Чат уже создан');
+                    } else {
+                        alert('Ошибка при отправке запроса на сервер');
+                    }
+                });
         }
     }
 }
@@ -158,6 +179,7 @@ export default {
                                 </div>
                                 <div class="add" v-if="createPostHide">
                                     <button class="btn add-friend" @click="removeFriend">Удалить из друзей</button>
+                                    <button class="btn btn-warning" @click="createChat">Создать переписку</button>
                                 </div>
                             </div>
                         </div>
@@ -206,13 +228,14 @@ export default {
     }
 
     .info-card {
-        font-style: italic;
         border: 3px solid lightgrey;
         max-width: 595px;
         height: 60px;
+        font-weight: bold;
         border-radius: 5px;
         overflow-y: scroll;
         cursor: pointer;
+        font-size: 18px;
     }
 
     .ok {
@@ -251,6 +274,11 @@ export default {
         opacity: 0.7;
     }
     
+    .add {
+        display: flex;
+        justify-content: space-between;
+    }
+
     .add-friend {
         background-color: rgb(220, 18, 18);
         color: #fff!important;
