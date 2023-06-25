@@ -1,0 +1,93 @@
+[{
+  "_id": {
+    "$oid": "6496ecdc57bd2ba755ce2869"
+  },
+  "avatar": "https://ru-static.z-dn.net/files/d3a/2b53389a7e5ada96f67c1af85463d247.jpg",
+  "firstName": "Роман",
+  "lastName": "Романов",
+  "info": "Без описания",
+  "password": "admin",
+  "mail": "test1@gmail.com",
+  "friends": [
+    {
+      "$oid": "6496ecff57bd2ba755ce286d"
+    },
+    {
+      "$oid": "6496eced57bd2ba755ce286b"
+    }
+  ],
+  "chats": [
+    {
+      "$oid": "6497dae0de3f0596bbb0a1ef"
+    }
+  ],
+  "__v": 3
+},
+{
+  "_id": {
+    "$oid": "6496eced57bd2ba755ce286b"
+  },
+  "avatar": "https://thumbs.dreamstime.com/b/%D0%B2%D1%8B%D1%80%D0%B0%D0%B6%D0%B5%D0%BD%D0%B8%D0%B5-%D0%BB%D0%B8%D1%86%D0%B0-%D0%BF%D1%80%D0%B5%D0%BA%D1%80%D0%B0%D1%81%D0%BD%D0%BE%D0%B3%D0%BE-%D0%B1%D0%B8%D0%B7%D0%BD%D0%B5%D1%81%D0%BC%D0%B5%D0%BD%D0%B0-%D0%BA%D1%80%D0%B0%D1%81%D0%B8%D0%B2%D1%8B%D1%85-%D1%80%D0%B0%D0%B7%D0%BE%D1%87%D0%B0%D1%80%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D0%BE%D0%B5-212169575.jpg",
+  "firstName": "Андрей",
+  "lastName": "Филатов",
+  "info": "Без описания",
+  "password": "admin",
+  "mail": "test2@gmail.com",
+  "friends": [
+    {
+      "$oid": "6496ecdc57bd2ba755ce2869"
+    }
+  ],
+  "chats": [],
+  "__v": 1
+},
+{
+  "_id": {
+    "$oid": "6496ecff57bd2ba755ce286d"
+  },
+  "avatar": "https://sun6-20.userapi.com/s/v1/ig2/FUoARPEIhI7ig62_07HOk90olyibiikj4fCzVaBxZ-tdUwb5H0JZfKI9pnNURUyU8Zzk_n2QoG8Zs8a0oGR0aXt4.jpg?size=996x996&quality=95&crop=2,0,996,996&ava=1",
+  "firstName": "Александра",
+  "lastName": "Климова",
+  "info": "Без описания",
+  "password": "admin",
+  "mail": "test3@gmail.com",
+  "friends": [
+    {
+      "$oid": "6496ecdc57bd2ba755ce2869"
+    }
+  ],
+  "chats": [
+    {
+      "$oid": "6497dae0de3f0596bbb0a1ef"
+    }
+  ],
+  "__v": 2
+},
+{
+  "_id": {
+    "$oid": "6496ed1457bd2ba755ce286f"
+  },
+  "avatar": "https://st3.depositphotos.com/1007566/14056/v/450/depositphotos_140563564-stock-illustration-young-woman-avatar-character.jpg",
+  "firstName": "Анастасия",
+  "lastName": "Андреева",
+  "info": "Без описания",
+  "password": "admin",
+  "mail": "test4@gmail.com",
+  "friends": [],
+  "chats": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "6496ed4757bd2ba755ce2871"
+  },
+  "avatar": "https://yt3.ggpht.com/ytc/AKedOLQ80s7MHIiTfLyI6HMSWNih7aK_fm7NHPwzpMOoVw=s900-c-k-c0x00ffffff-no-rj",
+  "firstName": "Кирилл",
+  "lastName": "Симонов",
+  "info": "Без описания",
+  "password": "admin",
+  "mail": "test5@gmail.com",
+  "friends": [],
+  "chats": [],
+  "__v": 0
+}]

@@ -19,12 +19,12 @@ let userSchema = new mongoose.Schema({
     firstName: String,
     lastName: String,
     info: String,
+    password: String,
+    mail: String,
     friends: [{
         type: mongoose.ObjectId,
         ref: 'user'
     }],
-    password: String,
-    mail: String,
     chats: [{
         type: mongoose.ObjectId,
         ref: 'chat'
@@ -42,14 +42,10 @@ let postSchema = new mongoose.Schema({
 })
 
 let chatSchema = new mongoose.Schema ({
-    from: {
+    people: [{
         type: mongoose.ObjectId,
         ref: 'user'
-    },
-    to: {
-        type: mongoose.ObjectId,
-        ref: 'user'
-    },
+    }],
     messages: [{
         type: mongoose.ObjectId,
         ref: 'message'
@@ -66,8 +62,9 @@ let messageSchema = new mongoose.Schema ({
         ref: 'user'
     },
     text: String
+}, {
+    timestamps: true
 })
-
 
 let User = mongoose.model('user', userSchema)
 let Post = mongoose.model('post', postSchema)
@@ -85,11 +82,12 @@ app.post('/register', async function(req,res) {
     let user = new User({
         firstName: name,
         lastName: surname,
-        avatar: 'no-profile-image.png',
+        avatar: 'https://yt3.ggpht.com/ytc/AKedOLQ80s7MHIiTfLyI6HMSWNih7aK_fm7NHPwzpMOoVw=s900-c-k-c0x00ffffff-no-rj',
         info: 'Без описания',
         password: password,
         mail: mail,
-        friends: []
+        friends: [],
+        chats: []
     })
 
     await user.save()
@@ -273,7 +271,7 @@ app.post('/chat', async function (req,res) {
     let currentUser = await User.findOne({ _id: currentuser });
     let friendUser = await User.findOne({ _id: friendId });
 
-    let check = await Chat.findOne({from: currentUser, to: friendId})
+    let check = await Chat.findOne({ people: { $all: [currentUser._id, friendId] } });
 
     if(check) {
         res.status(400).send('Чат уже создан');
@@ -281,8 +279,7 @@ app.post('/chat', async function (req,res) {
     }
 
     let chat = new Chat({
-        from: currentUser,
-        to: friendId,
+        people: [currentUser, friendId],
         messages: []
     })
 
@@ -295,4 +292,35 @@ app.post('/chat', async function (req,res) {
     await friendUser.save();
 
     res.send('Чат создан');
+})
+
+app.get('/chats', async function(req,res) {
+    if (currentuser == null) {
+        res.status(403).send('Вы не вошли в аккаунт');
+        return;
+    }
+
+    let chats = await Chat.find({people: currentuser}).populate({
+        path: 'people',
+        select: 'firstName lastName avatar',
+        match: {_id: {$ne: currentuser}}
+    })
+
+    res.send(chats)
+})
+
+app.get('/chat', async function(req,res) {
+    if (currentuser == null) {
+        res.status(403).send('Вы не вошли в аккаунт');
+        return;
+    }
+    let id = req.query.id
+
+    let chat = await Chat.findOne({_id: id}).populate({
+        path: 'people',
+        select: 'firstName lastName',
+        match: {_id: {$ne: currentuser}}
+    })
+
+    res.send(chat)
 })

@@ -34,7 +34,7 @@
             <div class="card-body">
                 <header>
                     <div class="info-card">
-                        <img :src="'/src/avatars/' + item.author.avatar">
+                        <img :src="item.author.avatar">
                         <div class="username">
                             {{ item.author.firstName }} {{ item.author.lastName }}
                         </div>

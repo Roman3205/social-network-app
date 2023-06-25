@@ -1,0 +1,15 @@
+[{
+  "_id": {
+    "$oid": "6497dae0de3f0596bbb0a1ef"
+  },
+  "people": [
+    {
+      "$oid": "6496ecdc57bd2ba755ce2869"
+    },
+    {
+      "$oid": "6496ecff57bd2ba755ce286d"
+    }
+  ],
+  "messages": [],
+  "__v": 0
+}]

@@ -89,7 +89,7 @@ export default {
         async ChangeImage(e) {
             e.preventDefault()
             if (this.image === '') {
-                this.image = 'no-profile-image.png';
+                this.image = 'https://yt3.ggpht.com/ytc/AKedOLQ80s7MHIiTfLyI6HMSWNih7aK_fm7NHPwzpMOoVw=s900-c-k-c0x00ffffff-no-rj';
             }
             await axios.post('/image-create', {
                 image: this.image
@@ -109,6 +109,7 @@ export default {
                     this.$router.push({
                     name: 'friends'
                 })
+                alert('Пользователь удален из друзей')
                 })
         },
 
@@ -121,8 +122,9 @@ export default {
                 .then(() => {
                     this.loadUser()
                     this.$router.push({
-                    name: 'friends'
+                    name: 'messages'
                 })
+                alert('Чат создан')
                 })
                 .catch(error => {
                     if (error.response && error.response.status === 400) {
@@ -145,8 +147,8 @@ export default {
             <div class="user-info">
                 <div class="card mb-3">
                     <div class="row g-0">
-                        <div class="col-md-4">
-                            <img :src="'/src/avatars/' + user.avatar" class="img-fluid rounded-start">
+                        <div class="col-md-4 my-2">
+                            <img :src="user.avatar" class="img-fluid rounded-start">
                             <div v-if="!createPostHide" class="img-selector d-flex g-0">
                                 <input type="text" v-model="image" class="input-info img-inp mt-1" placeholder="Вставьте ссылку на изображение"/>
                                 <form @submit="ChangeImage">
@@ -186,8 +188,8 @@ export default {
                     </div>
                 </div>
             </div>
-            <div class="user-wall" v-if="!createPostHide">
-                <form class="post-form my-3" @submit="createPost">
+            <div class="user-wall">
+                <form class="post-form my-3" @submit="createPost" v-if="!createPostHide">
                     <textarea v-model="postContent" class="form-control" rows="2" placeholder="Что у вас нового?"></textarea>
                     <button type="submit" class="btn btn-warning">
                         Отправить
@@ -210,8 +212,7 @@ export default {
 
 <style scoped>
     .user-page img {
-        height: 85%;
-        width: 100%;
+        width: 300px;
         object-fit: cover;
         object-position: center;
     }

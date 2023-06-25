@@ -6,6 +6,7 @@ import AppEnter from './views/AppEnter.vue'
 import AppRegister from './views/AppRegister.vue'
 import NotFoundPage from './views/NotFoundPage.vue'
 import ChatsPage from './views/ChatsPage.vue'
+import MessengerPage from './views/MessengerPage.vue'
 
 export default createRouter({
     history: createWebHistory(),
@@ -46,9 +47,14 @@ export default createRouter({
             component: AppRegister
         },
         {
-            path: '/messages',
+            path: '/chats',
             name: 'messages',
             component: ChatsPage
+        },
+        {
+            path: '/chat/:id',
+            name: 'chat',
+            component: MessengerPage
         },
         {
             path: '/:pathMatch(.*)',

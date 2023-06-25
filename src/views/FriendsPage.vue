@@ -25,11 +25,11 @@
                 this.friends = response.data
             },
 
-            goUser(user) {
+            goUser(item) {
                 this.$router.push({
                     name: 'user',
                     params: {
-                        id: user._id
+                        id: item._id
                     }
                 })
             },
@@ -46,10 +46,11 @@
                         this.$router.push({
                             name: 'friends'
                         });
+                        alert('Пользователь добавлен в друзья')
                     })
                     .catch(error => {
                         if (error.response && error.response.status === 400) {
-                            alert('Вы уже создали чат с данным пользователем');
+                            alert('Данный пользователь уже у вас в друзьях');
                         } else {
                             alert('Ошибка при отправке запроса на сервер');
                         }
@@ -65,7 +66,7 @@
         <h3>Друзья</h3>
         <ul class="list-group my-3">
             <li @click="goUser(item)" v-for="(item, index) in friends" class="list-group-item user">
-                <img :src="'src/avatars/' + item.avatar">
+                <img :src="item.avatar">
                 <div class="username">
                     {{ item.firstName }} {{ item.lastName }}
                 </div>  
@@ -75,7 +76,7 @@
         <ul class="list-group my-3">
             <li v-for="(item, index) in users" class="list-group-item userall">
                 <div class="users-card-info">
-                    <img :src="'src/avatars/' + item.avatar">
+                    <img :src="item.avatar">
                     <div class="username">
                         {{ item.firstName }} {{ item.lastName }}
                     </div> 
