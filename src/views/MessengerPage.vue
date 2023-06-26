@@ -73,7 +73,10 @@
         </div>
         <div class="messages-container">
             <div v-for="(item) in param" :class="{'message-l': item.from === to, 'message-r': item.from !== to}" >
-                <div>{{ item.text }} <p><sub>{{ getRelativeDate(item.createdAt) }}</sub></p></div>
+                <div class="text-message">
+                    <div>{{ item.text }}</div>
+                    <div class="date" :class="{'left': item.from === to, 'right': item.from !== to}" ><p><sub>{{ getRelativeDate(item.createdAt) }}</sub></p></div>
+                </div>
             </div>
         </div>
         <div class="send-message-form">
@@ -122,6 +125,21 @@
         align-items: center;
     }
 
+    .text-message {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 0px;
+    }
+
+    .left {
+        align-self: flex-start;
+    }
+
+    .right {
+        align-self: flex-end;
+    }
+
     .send-message-form input {
         width: 83%;
         height: 40px;
@@ -144,13 +162,13 @@
         margin: 20px 0px 20px 0px;
         border: 2px solid grey;
         border-radius: 10px;
-        font-size: 22px;
+        font-size: 25px;
         padding: 20px;
         gap: 10px;
     }
 
     .messages-container p {
-        font-size: 19px;
+        font-size: 19.5px;
     }
 
     .messages-container::-webkit-scrollbar {
@@ -167,7 +185,8 @@
         flex-direction: column;
         align-self: flex-start;
         padding: 5px 17px 0px 17px;
-        max-width: 150px;
+        max-width: 350px;
+        word-wrap: break-word;
     }
 
     .message-r {
@@ -176,7 +195,7 @@
         flex-direction: column;
         align-self: flex-end;
         padding: 5px 17px 0px 17px;
-        max-width: 300px;
+        max-width: 350px;
         word-wrap: break-word;
     }
 
