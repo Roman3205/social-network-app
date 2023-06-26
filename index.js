@@ -36,7 +36,8 @@ let postSchema = new mongoose.Schema({
         type: mongoose.ObjectId,
         ref: 'user'
     },
-    content: String
+    content: String,
+    likes: Number
 }, {
     timestamps: true
 })
@@ -92,7 +93,7 @@ app.post('/register', async function(req,res) {
 
     await user.save()
 
-    res.send(user)
+    res.send('Регистрация прошла успешно')
 })
 
 app.post('/enter', async function(req,res) {
@@ -103,13 +104,13 @@ app.post('/enter', async function(req,res) {
 
     if(user) {
         currentuser = user._id
-        res.send(user)
+        res.send('Вход выполнен успешно')
     } else {
-        res.status(404).send('User not found');
+        res.status(404).send('Пользователь не найден');
     }
 })
 
-app.post('/info-create', async function(req,res) {
+app.post('/info/create', async function(req,res) {
     let info = req.body.info
 
     let user = await User.findOne({_id: currentuser})
@@ -117,10 +118,10 @@ app.post('/info-create', async function(req,res) {
 
     await user.save()
 
-    res.send(user)
+    res.send('Описание задано')
 })
 
-app.post('/image-create', async function(req,res) {
+app.post('/image/create', async function(req,res) {
     let image = req.body.image
 
     let user = await User.findOne({_id: currentuser})
@@ -128,7 +129,7 @@ app.post('/image-create', async function(req,res) {
 
     await user.save()
 
-    res.send(user)
+    res.send('Фото профиля задано')
 })
 
 app.get('/profile', async function (req, res) {
@@ -191,20 +192,38 @@ app.post('/post/create', async function (req, res) {
     
     let post = new Post({
         author: currentuser,
-        content: content
+        content: content,
+        likes: 0
     })
     
     await post.save()
 
-    res.send(post)
+    res.send('Пост создан!')
+})
+
+app.post('/post/like', async function (req,res) {
+    let id = req.body.id
+
+    let post = await Post.findOne({ _id: id })
+
+    if(!post) {
+        res.status(404).send('Пост не найден')
+        return;
+    }
+
+    post.likes += 1
+
+    await post.save()
+
+    res.send('Лайк поставлен на данный пост')
 })
 
 app.post('/logout', async function (req, res) {
     currentuser = null
-    res.send('Logged out')
+    res.send('Выход из аккаунта выполнен')
 })
 
-app.post('/add-friend', async function(req,res) {
+app.post('/friend/add', async function(req,res) {
     let friendId = req.body.friendId
 
     let currentUser = await User.findOne({ _id: currentuser });
@@ -226,7 +245,7 @@ app.post('/add-friend', async function(req,res) {
     res.send('Пользователь успешно добавлен в друзья');
 })
 
-app.post('/remove-friend', async function(req, res) {
+app.post('/friend/remove', async function(req, res) {
     let friendId = req.body.friendId;
 
     let currentUser = await User.findOne({ _id: currentuser });
@@ -265,7 +284,7 @@ app.get('/friends', async function(req, res) {
     res.send(friends)
 })
 
-app.post('/chat', async function (req,res) {
+app.post('/chat/create', async function (req,res) {
     let friendId = req.body.friendId
 
     let currentUser = await User.findOne({ _id: currentuser });
@@ -294,7 +313,7 @@ app.post('/chat', async function (req,res) {
     res.send('Чат создан');
 })
 
-app.get('/chats', async function(req,res) {
+app.get('/chat/all', async function(req,res) {
     if (currentuser == null) {
         res.status(403).send('Вы не вошли в аккаунт');
         return;
@@ -334,7 +353,7 @@ app.get('/chat', async function(req,res) {
     res.send({chat, messages})
 })
 
-app.post('/message-send', async function(req,res) {
+app.post('/message/send', async function(req,res) {
     let text = req.body.text
     let to = req.body.to
     let id = req.body.id

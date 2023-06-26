@@ -19,6 +19,15 @@
                 this.feed = response.data
             },
 
+            async setLike(e, item) {
+                e.preventDefault()
+                await axios.post('/post/like', {
+                    id: item._id
+                })
+
+                this.loadFeed()
+            },
+
             getRelativeDate(date) {
             let day = dayjs(date);
             return day.fromNow();
@@ -28,7 +37,7 @@
 </script>
 
 <template>
-    <div class="feed-page">
+    <div class="feed-page mb-4">
         <h3>Новости</h3>
         <article v-for="(item, index) in feed" class="card mt-3">
             <div class="card-body">
@@ -43,8 +52,16 @@
                         {{ getRelativeDate(item.createdAt) }}
                     </div>
                 </header>
-                <div class="card-text">
-                    {{ item.content }}
+                <div class="flex-info d-flex mb-2">
+                    <div class="card-text">
+                        {{ item.content }}
+                    </div>
+                    <button type="button" @click="setLike($event, item)" class="btn btn-outline-danger">
+                        Like
+                        <span class="badge rounded-pill text-bg-danger">
+                            {{ item.likes }}
+                        </span>
+                    </button>
                 </div>
             </div>
         </article>
@@ -77,6 +94,11 @@
     header {
         display: flex;
         justify-content: space-between;
+    }
+
+    .flex-info {
+        justify-content: space-between;
+        align-items: center;
     }
 
     .info-card {

@@ -14,7 +14,7 @@
 
         methods: {
             async loadChats() {
-                let response = await axios.get('/chats')
+                let response = await axios.get('/chat/all')
                 this.chats = response.data
             },
 

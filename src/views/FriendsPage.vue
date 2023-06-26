@@ -37,7 +37,7 @@
             async addFriend(e, user) {
                 e.preventDefault();
                 axios
-                    .post('/add-friend', {
+                    .post('/friend/add', {
                         friendId: user._id
                     })
                     .then(() => {

@@ -46,7 +46,7 @@
             async sendMessage(e) {
                 e.preventDefault()
                 if(this.text !== '') {
-                    await axios.post('/message-send', {
+                    await axios.post('/message/send', {
                         text: this.text,
                         to: this.to,
                         id: this.$route.params.id

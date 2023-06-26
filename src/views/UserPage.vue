@@ -79,7 +79,7 @@ export default {
             if (this.info === '') {
                 this.info = 'Без описания';
             }
-            await axios.post('/info-create', {
+            await axios.post('/info/create', {
             info: this.info,
             })
             this.info = ''
@@ -91,7 +91,7 @@ export default {
             if (this.image === '') {
                 this.image = 'https://yt3.ggpht.com/ytc/AKedOLQ80s7MHIiTfLyI6HMSWNih7aK_fm7NHPwzpMOoVw=s900-c-k-c0x00ffffff-no-rj';
             }
-            await axios.post('/image-create', {
+            await axios.post('/image/create', {
                 image: this.image
             })
             this.image = ''
@@ -101,7 +101,7 @@ export default {
         async removeFriend(e) {
             e.preventDefault()
             axios
-                .post('/remove-friend', {
+                .post('/friend/remove', {
                     friendId: this.user._id
                 })
                 .then(() => {
@@ -116,7 +116,7 @@ export default {
         async createChat(e) {
             e.preventDefault()
             axios
-                .post('/chat', {
+                .post('/chat/create', {
                     friendId: this.user._id
                 })
                 .then(() => {
