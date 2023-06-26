@@ -1,31 +1,64 @@
 <script>
-    import axios from 'axios'
+    import axios from 'axios';
+    import dayjs from 'dayjs';
 
     export default {
         data() {
             return {
-                information: []
+                information: [],
+                messages: [],
+                name: '',
+                surname: '',
+                text: '',
+                to: '',
+                param: null
             }
         },
 
         mounted() {
-            this.loadPage()
+            this.loadInfo()
         },
 
         methods: {
-            async loadPage() {
-                await this.loadInfo()
-            },
-
             async loadInfo() {
                 let response = await axios.get('/chat', {
                     params: {
                         id: this.$route.params.id
                     }
                 })
-                this.information = response.data
-                console.log(this.information.people[0].firstName)
-                console.log(this.information.people[0].lastName)
+                this.information = response.data.chat
+                this.messages = response.data.messages
+                this.name = this.information.people[0].firstName
+                this.surname = this.information.people[0].lastName
+                this.to = this.information.people[0]._id
+                this.param = this.messages[0].messages
+
+                this.$nextTick(() => {
+                    this.scrollToBottom()
+                })
+            },
+
+            scrollToBottom() {
+                let container = document.querySelector('.messages-container')
+                container.scrollTop = container.scrollHeight
+            },
+
+            async sendMessage(e) {
+                e.preventDefault()
+                if(this.text !== '') {
+                    await axios.post('/message-send', {
+                        text: this.text,
+                        to: this.to,
+                        id: this.$route.params.id
+                    })
+                    this.text = ''
+                }
+                this.loadInfo()
+            },
+
+            getRelativeDate(date) {
+                let day = dayjs(date)
+                return day.fromNow()
             }
         }
     }
@@ -35,39 +68,17 @@
     <div class="container">
         <div class="info-user">
             <div class="user-chat">
-                {{ information.people[0].firstName }}
-                {{ information.people[0].lastName }}
+                {{ name }} {{ surname }}
             </div>
         </div>
         <div class="messages-container">
-                <div class="message-l">
-                    <div>Сообщение</div>
-                </div>
-                <div class="message-r">
-                    <div>Сообщение</div>
-                </div>
-                <div class="message-l">
-                    <div>Сообщение</div>
-                </div>
-                <div class="message-l">
-                    <div>Сообщение</div>
-                </div>
-                <div class="message-r">
-                    <div>Сообщение</div>
-                </div>
-                <div class="message-l">
-                    <div>Сообщение</div>
-                </div>
-                <div class="message-r">
-                    <div>Сообщение</div>
-                </div>
-                <div class="message-r">
-                    <div>Сообщение</div>
-                </div>
+            <div v-for="(item) in param" :class="{'message-l': item.from === to, 'message-r': item.from !== to}" >
+                <div>{{ item.text }} <p><sub>{{ getRelativeDate(item.createdAt) }}</sub></p></div>
+            </div>
         </div>
         <div class="send-message-form">
-        <form action="">
-            <input type="text">
+        <form @submit="sendMessage">
+            <input v-model="text" type="text">
             <button type="submit" class="btn btn-warning">Отправить</button>
         </form>
         </div>
@@ -133,9 +144,13 @@
         margin: 20px 0px 20px 0px;
         border: 2px solid grey;
         border-radius: 10px;
-        font-size: 20px;
+        font-size: 22px;
         padding: 20px;
         gap: 10px;
+    }
+
+    .messages-container p {
+        font-size: 19px;
     }
 
     .messages-container::-webkit-scrollbar {
@@ -151,7 +166,8 @@
         display: flex;
         flex-direction: column;
         align-self: flex-start;
-        padding: 5px 17px;
+        padding: 5px 17px 0px 17px;
+        max-width: 150px;
     }
 
     .message-r {
@@ -159,7 +175,9 @@
         display: flex;
         flex-direction: column;
         align-self: flex-end;
-        padding: 5px 17px;
+        padding: 5px 17px 0px 17px;
+        max-width: 300px;
+        word-wrap: break-word;
     }
 
     .message-l,

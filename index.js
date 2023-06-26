@@ -322,5 +322,37 @@ app.get('/chat', async function(req,res) {
         match: {_id: {$ne: currentuser}}
     })
 
-    res.send(chat)
+    let check = await User.findOne({ _id: currentuser, chats: chat._id }).populate('chats');
+
+    if (!check) {
+        res.status(403).send('Вы не вошли в аккаунт');
+        return;
+    }
+
+    let messages = await Chat.find({_id: id}).populate('messages')
+
+    res.send({chat, messages})
+})
+
+app.post('/message-send', async function(req,res) {
+    let text = req.body.text
+    let to = req.body.to
+    let id = req.body.id
+
+    let from = await User.findOne({ _id: currentuser })
+    
+    let message = new Message({
+        from: from,
+        to: to,
+        text: text
+    })
+
+    await message.save()
+
+    let chat = await Chat.findOne({_id: id}).populate('messages')
+
+    chat.messages.push(message._id);
+    await chat.save();
+
+    res.send('Сообщение отправлено');
 })
