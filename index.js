@@ -181,7 +181,7 @@ app.get('/feed', async function (req, res) {
         res.status(403).send('Вы не вошли в аккаунт');
         return;
     }
-    let posts = await Post.find({author: {$ne: currentuser}}).sort({createdAt: -1}).limit(5).populate('author')
+    let posts = await Post.find({author: {$ne: currentuser}}).sort({createdAt: -1}).populate('author')
     
     res.send(posts)
 })
