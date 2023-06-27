@@ -45,6 +45,10 @@ export default {
                 alert('Имя и фамилия не должны совпадать')
             } else if(this.name.length < 2 || this.surname.length < 5) {
                 alert('Введите правильно свои данные')
+            } else if (!/^[А-Яа-я\s,'-.!" "?]+$/.test(this.name) || !/^[А-Яа-я\s,'-.!" "?]+$/.test(this.surname)) {
+                alert('Имя и фамилия должны содержать только русские буквы')
+            } else if(this.mail.length < 15) {
+                alert('Почта слишком короткая')
             } else if(this.password !== this.passwordRepeat) {
                 alert('Пароли не совпадают')
             } else if(this.password.length < 5) {

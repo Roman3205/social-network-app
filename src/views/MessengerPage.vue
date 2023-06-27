@@ -5,10 +5,8 @@
     export default {
         data() {
             return {
-                information: [],
+                information: null,
                 messages: [],
-                name: '',
-                surname: '',
                 text: '',
                 to: '',
                 param: null
@@ -28,8 +26,6 @@
                 })
                 this.information = response.data.chat
                 this.messages = response.data.messages
-                this.name = this.information.people[0].firstName
-                this.surname = this.information.people[0].lastName
                 this.to = this.information.people[0]._id
                 this.param = this.messages[0].messages
 
@@ -67,8 +63,8 @@
 <template>
     <div class="container">
         <div class="info-user">
-            <div class="user-chat">
-                {{ name }} {{ surname }}
+            <div class="user-chat" v-if="information">
+                {{ information.people[0].firstName }} {{ information.people[0].lastName }}
             </div>
         </div>
         <div class="messages-container">
