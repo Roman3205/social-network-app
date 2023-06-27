@@ -39,6 +39,7 @@
 <template>
     <div class="feed-page mb-4">
         <h3>Новости</h3>
+        <p class="mt-4 empty-list" v-if="this.feed.length == 0">На данный момент новостей нет</p>
         <article v-for="(item, index) in feed" class="card mt-3">
             <div class="card-body">
                 <header>
@@ -99,6 +100,10 @@
     .flex-info {
         justify-content: space-between;
         align-items: center;
+    }
+
+    .empty-list {
+        font-size: 20px;
     }
 
     .info-card {

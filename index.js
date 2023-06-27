@@ -245,31 +245,27 @@ app.post('/friend/add', async function(req,res) {
     res.send('Пользователь успешно добавлен в друзья');
 })
 
-app.post('/friend/remove', async function(req, res) {
+app.post('/friend/remove', async function (req, res) {
     let friendId = req.body.friendId;
-
     let currentUser = await User.findOne({ _id: currentuser });
     let friendUser = await User.findOne({ _id: friendId });
-
+  
     if (!currentUser) {
-        res.status(404).send('Пользователь не найден');
-        return;
+      return res.status(404).send('Пользователь не найден');
     }
-
+  
     if (!friendUser) {
-        res.status(404).send('Друг не найден');
-        return;
+      return res.status(404).send('Друг не найден');
     }
-
-    currentUser.friends.splice(friendId, 1);
+  
+    currentUser.friends = currentUser.friends.filter(id => id.toString() !== friendId);
     await currentUser.save();
-
-    friendUser.friends.splice(currentuser, 1);
+  
+    friendUser.friends.splice(currentUser, 1)
     await friendUser.save();
-
+  
     res.send('Пользователь удален из друзей');
-});
-
+});  
 
 app.get('/friends', async function(req, res) {
     let user = await User.findOne({ _id: currentuser }).populate('friends', '-friends')

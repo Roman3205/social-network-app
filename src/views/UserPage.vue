@@ -98,8 +98,7 @@ export default {
             this.loadUser()
         },
 
-        async removeFriend(e) {
-            e.preventDefault()
+        async removeFriend() {
             axios
                 .post('/friend/remove', {
                     friendId: this.user._id
@@ -113,8 +112,7 @@ export default {
                 })
         },
 
-        async createChat(e) {
-            e.preventDefault()
+        async createChat() {
             axios
                 .post('/chat/create', {
                     friendId: this.user._id

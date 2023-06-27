@@ -55,8 +55,13 @@
                             alert('Ошибка при отправке запроса на сервер');
                         }
                     });
-            }
+            },
 
+
+
+            isFriend(user) {
+                return this.friends.some(friend => friend._id === user._id)
+            }
         }
     }
 </script>
@@ -64,6 +69,7 @@
 <template>
     <div class="users-page">
         <h3>Друзья</h3>
+        <p class="mt-5 empty-list" v-if="this.friends.length == 0">Список друзей пуст</p>
         <ul class="list-group my-3">
             <li @click="goUser(item)" v-for="(item, index) in friends" class="list-group-item user">
                 <img :src="item.avatar">
@@ -82,7 +88,8 @@
                     </div> 
                 </div> 
                 <div class="add">
-                    <button class="btn btn-warning add-friend" @click="addFriend($event, item)">Добавить в друзья</button>
+                    <button v-if="!isFriend(item)" class="btn btn-warning add-friend" @click="addFriend($event, item)">Добавить в друзья</button>
+                    <button v-if="isFriend(item)" class="btn btn-warning add-friend" disabled>У вас в друзьях</button>
                 </div>
             </li>
         </ul>
@@ -111,6 +118,10 @@
 
     .users-page .username {
         font-weight: bold;
+    }
+
+    .empty-list {
+        font-size: 20px;
     }
 
     .users-card-info {

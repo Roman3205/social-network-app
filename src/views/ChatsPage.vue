@@ -33,6 +33,7 @@
 <template>
     <div class="users-page">
         <h3>Чаты</h3>
+        <p class="mt-4 empty-list" v-if="this.chats.length == 0">У вас нет чатов</p>
         <ul class="list-group my-3">
             <li @click="goChat(item)" v-for="(item, index) in chats" class="list-group-item user">
                 <img :src="item.people[0].avatar">
@@ -44,7 +45,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 .users-page img {
         width: 80px;
         height: 80px;
@@ -62,6 +63,10 @@
         display: flex;
         gap: 20px;
         align-items: center;
+    }
+
+    .empty-list {
+        font-size: 20px;
     }
 
     .users-page .username {
