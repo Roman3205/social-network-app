@@ -44,7 +44,7 @@
   "_id": {
     "$oid": "6496ed4757bd2ba755ce2871"
   },
-  "avatar": "https://yt3.ggpht.com/ytc/AKedOLQ80s7MHIiTfLyI6HMSWNih7aK_fm7NHPwzpMOoVw=s900-c-k-c0x00ffffff-no-rj",
+  "avatar": "https://ms-luxury-hair.ru/images/testimonies/and-png-png",
   "firstName": "Кирилл",
   "lastName": "Симонов",
   "info": "Без описания",
@@ -64,6 +64,34 @@
   "info": "Без описания",
   "password": "admin",
   "mail": "test1@gmail.com",
+  "friends": [],
+  "chats": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "649b01c176368284d20443d3"
+  },
+  "avatar": "https://ms-luxury-hair.ru/images/testimonies/and-png-png",
+  "firstName": "Роман",
+  "lastName": "Иванов",
+  "info": "Без описания",
+  "password": "qwerty",
+  "mail": "q@gmail.com",
+  "friends": [],
+  "chats": [],
+  "__v": 0
+},
+{
+  "_id": {
+    "$oid": "649b03bb1f3add0a631957b8"
+  },
+  "avatar": "https://ms-luxury-hair.ru/images/testimonies/and-png-png",
+  "firstName": "Андрей",
+  "lastName": "Андреев",
+  "info": "Без описания",
+  "password": "admin",
+  "mail": "qwerty@gmail.com",
   "friends": [],
   "chats": [],
   "__v": 0

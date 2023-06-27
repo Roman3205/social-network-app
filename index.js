@@ -83,7 +83,7 @@ app.post('/register', async function(req,res) {
     let user = new User({
         firstName: name,
         lastName: surname,
-        avatar: 'https://yt3.ggpht.com/ytc/AKedOLQ80s7MHIiTfLyI6HMSWNih7aK_fm7NHPwzpMOoVw=s900-c-k-c0x00ffffff-no-rj',
+        avatar: 'https://ms-luxury-hair.ru/images/testimonies/and-png-png',
         info: 'Без описания',
         password: password,
         mail: mail,

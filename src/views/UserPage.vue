@@ -89,7 +89,7 @@ export default {
         async ChangeImage(e) {
             e.preventDefault()
             if (this.image === '') {
-                this.image = 'https://yt3.ggpht.com/ytc/AKedOLQ80s7MHIiTfLyI6HMSWNih7aK_fm7NHPwzpMOoVw=s900-c-k-c0x00ffffff-no-rj';
+                this.image = 'https://ms-luxury-hair.ru/images/testimonies/and-png-png';
             }
             await axios.post('/image/create', {
                 image: this.image
