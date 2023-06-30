@@ -1,4 +1,4 @@
-# 1.first-project
+# 1.Social-network
 
 This template should help get you started developing with Vue 3 in Vite.
 
